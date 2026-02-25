@@ -43,8 +43,7 @@ graph TD;
     
     Github --> Release["RELEASE.yml (CI/CD Automation)"]
     
-    Scripts --> BuildBat["build_portable.bat (Windows Builder)"]
-    Scripts --> BuildSh["build_portable.sh (Mac/Linux Builder)"]
+    Scripts --> BuildBat["build_installer.bat (Windows MSI Installer)"]
     Scripts --> StartBat["start.bat (Windows Dev Launch)"]
     Scripts --> StartSh["start.sh (Mac/Linux Dev Launch)"]
 ```
@@ -76,22 +75,16 @@ chmod +x start.sh
 ./start.sh
 ```
 
-### Packaging into a Standalone Portable App
+### Packaging into a Standalone Setup Installer
 
-To bundle SMCMAP into a completely self-contained `.exe` or executable directory without requiring end-users to have Java or C++ installed, simply execute:
+To bundle SMCMAP into a completely self-contained `.msi` Windows Setup Installer without requiring end-users to have Java or C++ installed, simply execute:
 
-**On Windows:**
+**On Windows (Requires WiX Toolset):**
 ```bat
-.\build_portable.bat
+.\build_installer.bat
 ```
 
-**On macOS / Linux:**
-```bash
-chmod +x build_portable.sh
-./build_portable.sh
-```
-
-This will automatically compile both backends and link them into an output directory called `portable_build`.
+This will automatically compile both backends, download necessary JRE modules, and package them into an output directory called `installer_build`.
 
 ---
 

@@ -16,9 +16,11 @@ call mvn dependency:copy-dependencies -DoutputDirectory=target/lib
 copy target\smcmap-frontend-1.0-SNAPSHOT.jar target\lib\smcmap-frontend-1.0-SNAPSHOT.jar
 cd ..
 
-echo Creating Portable Package with jpackage...
+echo Creating App Image with jpackage...
 rmdir /S /Q portable_build 2>nul
+rmdir /S /Q installer_build 2>nul
 mkdir portable_build
+mkdir installer_build
 
 jpackage --type app-image ^
     --name SMCMAP ^
@@ -26,11 +28,19 @@ jpackage --type app-image ^
     --main-jar smcmap-frontend-1.0-SNAPSHOT.jar ^
     --main-class com.smcmap.Launcher ^
     --dest portable_build ^
-    --vendor "Harshad NIkam" ^
-    --app-version "2.1"
+    --vendor "Harshad Nikam" ^
+    --app-version "1.0"
 
-echo Copying C++ Agent to the portable directory...
+echo Copying C++ Agent to the app image...
 copy agent\build\Release\smcmap_agent.exe portable_build\SMCMAP\smcmap_agent.exe
 
-echo Done! The portable application is located in the portable_build\SMCMAP folder.
-echo You can zip this folder and share it as a standalone app!
+echo Creating MSI Installer Package (Requires WiX Toolset 3.0+)...
+jpackage --type msi ^
+    --app-image portable_build\SMCMAP ^
+    --name SMCMAP-Setup ^
+    --dest installer_build ^
+    --win-shortcut ^
+    --win-menu ^
+    --win-dir-chooser
+
+echo Done! The MSI installer is located in the installer_build folder.

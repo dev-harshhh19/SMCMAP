@@ -25,25 +25,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
-
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: 'latest'
 
-      - name: Run Portable Build Script
+      - name: Run Installer Build Script
         run: |
-          call build_portable.bat
+          call build_installer.bat
         shell: cmd
-
-      - name: Zip the Application
-        run: |
-          powershell Compress-Archive -Path portable_build\SMCMAP -DestinationPath SMCMAP-Windows-Portable.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: SMCMAP-Windows-Portable.zip
+          files: installer_build/*.msi
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
