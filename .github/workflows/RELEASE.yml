@@ -1,0 +1,47 @@
+name: Build and Release SMCMAP
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - 'version-*'
+      - 'release-*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: 'latest'
+
+      - name: Run Portable Build Script
+        run: |
+          call build_portable.bat
+        shell: cmd
+
+      - name: Zip the Application
+        run: |
+          powershell Compress-Archive -Path portable_build\SMCMAP -DestinationPath SMCMAP-Windows-Portable.zip
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: SMCMAP-Windows-Portable.zip
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
