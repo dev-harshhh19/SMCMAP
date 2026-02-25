@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>SMCMAP V2 | Modular Workspace</title>
+  <style>
+    .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon svg {
+      fill: currentColor;
+      width: 1em;
+      height: 1em;
+    }
+  </style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Consolas', sans-serif;
+      background: #0f0f0f;
+      color: #cbd5e1;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .flex-1 {
+      flex: 1;
+    }
+
+    .flex-col {
+      flex-direction: column;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .gap-2 {
+      gap: 8px;
+    }
+
+    .gap-3 {
+      gap: 12px;
+    }
+
+    .gap-4 {
+      gap: 16px;
+    }
+
+    .gap-6 {
+      gap: 24px;
+    }
+
+    .overflow-hidden {
+      overflow: hidden;
+    }
+
+    .truncate {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      background: #141414;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-logo {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    .sidebar-subtitle {
+      font-size: 9px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-top: 2px;
+    }
+
+    .nav {
+      flex: 1;
+      padding: 8px 12px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      color: #64748b;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.2s;
+      cursor: pointer;
+      margin-bottom: 2px;
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .nav-section {
+      padding: 16px 12px 4px;
+      font-size: 9px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .sidebar-profile {
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(16, 185, 129, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #10B981;
+      font-size: 14px;
+    }
+
+    .profile-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    .profile-status {
+      font-size: 9px;
+      color: #10B981;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .profile-status::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      background: #10B981;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    .profile-power {
+      background: none;
+      border: none;
+      color: #475569;
+      cursor: pointer;
+      font-size: 18px;
+      margin-left: auto;
+    }
+
+    .topbar {
+      height: 50px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(15, 15, 15, 0.7);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .topbar-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: white;
+    }
+
+    .topbar-version {
+      font-size: 13px;
+      color: #475569;
+      margin-left: 4px;
+    }
+
+    .topbar-divider {
+      width: 1px;
+      height: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 0 12px;
+    }
+
+    .topbar-layout {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .btn-icon {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-text {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .content::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .content::-webkit-scrollbar-thumb {
+      background: #4a4a4a;
+    }
+
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: minmax(100px, auto);
+      gap: 16px;
+    }
+
+    .module-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      transition: all 0.2s;
+      overflow: hidden;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    .module-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .module-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .module-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .module-time {
+      font-size: 9px;
+      color: #475569;
+      font-family: 'Consolas', monospace;
+    }
+
+    .metric-value {
+      font-size: 32px;
+      font-weight: 300;
+      color: white;
+      letter-spacing: -0.5px;
+    }
+
+    .metric-unit {
+      font-size: 14px;
+      color: #64748b;
+      margin-left: 4px;
+    }
+
+    .trend-up {
+      font-size: 11px;
+      color: #10B981;
+      font-family: monospace;
+    }
+
+    .trend-down {
+      font-size: 11px;
+      color: #EF4444;
+      font-family: monospace;
+    }
+
+    .card-icon {
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      color: rgba(255, 255, 255, 0.4);
+      display: flex;
+    }
+
+    .chart-area {
+      flex: 1;
+      position: relative;
+      min-height: 160px;
+    }
+
+    .chart-area svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .chart-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      font-family: monospace;
+      color: #475569;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 56px;
+      margin-top: 16px;
+    }
+
+    .bar {
+      flex: 1;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: height 0.6s ease;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: rgba(255, 255, 255, 0.4);
+      transition: width 0.6s ease;
+      border-radius: 2px;
+    }
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .table-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .status-badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-family: monospace;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #94a3b8;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      padding: 10px 20px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #64748b;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    td {
+      padding: 10px 20px;
+      font-size: 12px;
+      color: #e2e8f0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .proc-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .proc-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .kill-btn {
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+
+    .kill-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #EF4444;
+    }
+
+    .mono {
+      font-family: 'Consolas', monospace;
+    }
+
+    .footer {
+      height: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: #0c0c0c;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      font-size: 9px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      flex-shrink: 0;
+    }
+
+    .footer-dot {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-dot::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+    }
+
+    .footer-dot.green::before {
+      background: rgba(16, 185, 129, 0.5);
+    }
+
+    .footer-dot.dim::before {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .col-3 {
+      grid-column: span 3;
+    }
+
+    .col-4 {
+      grid-column: span 4;
+    }
+
+    .col-6 {
+      grid-column: span 6;
+    }
+
+    .col-8 {
+      grid-column: span 8;
+    }
+
+    .col-12 {
+      grid-column: span 12;
+    }
+
+    /* Form Controls */
+    .form-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      min-width: 100px;
+    }
+
+    .form-input,
+    .form-select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      padding: 6px 10px;
+      color: white;
+      font-size: 12px;
+      font-family: 'Consolas', monospace;
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .form-select option {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .btn-action {
+      padding: 6px 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-action.primary {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+    }
+
+    .btn-action.primary:hover {
+      background: rgba(16, 185, 129, 0.25);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .info-item {
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+    }
+
+    .info-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      font-family: 'Consolas', monospace;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .status-dot.online {
+      background: #10B981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+    }
+
+    .status-dot.offline {
+      background: #EF4444;
+    }
+
+    .config-result {
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: monospace;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .config-result.success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #10B981;
+    }
+
+    .config-result.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #EF4444;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex" style="height:100vh">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo"><span class="icon"><svg viewBox="0 0 24 24" width="20" height="20">
+              <path
+                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H8v-4h4v4zm0-6H8V7h4v4zm6 6h-4v-4h4v4zm0-6h-4V7h4v4z"
+                fill="currentColor" />
+            </svg></span></div>
+        <div>
+          <div class="sidebar-title">SMCMAP-WS</div>
+          <div class="sidebar-subtitle">System Terminal</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="nav-item active" onclick="showView('dashboard',this)"><span class="icon"><svg viewBox="0 0 24 24"
+              width="18" height="18">
+              <path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z" fill="currentColor" />
+            </svg></span> Dashboard</a>
+        <a class="nav-item" onclick="showView('analytics',this)"><span class="icon"><svg viewBox="0 0 24 24" width="18"
+              height="18">
+              <path
+                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"
+                fill="currentColor" />
+            </svg></span> Analytics</a>
+        <a class="nav-item" onclick="showView('nodes',this)"><span class="icon"><svg viewBox="0 0 24 24" width="18"
+              height="18">
+              <path
+                d="M22 9V7h-2V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v2H2v2h2v2H2v2h2v2H2v2h2v2c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H6V5h12v14z"
+                fill="currentColor" />
+            </svg></span> Nodes</a>
+        <div class="nav-section">Core Settings</div>
+        <a class="nav-item" onclick="showView('config',this)"><span class="icon"><svg viewBox="0 0 24 24" width="18"
+              height="18">
+              <path
+                d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
+                fill="currentColor" />
+            </svg></span> Config</a>
+      </nav>
+      <div class="sidebar-profile">
+        <div class="profile-avatar"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16">
+              <path
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                fill="currentColor" />
+            </svg></span></div>
+        <div style="flex:1;min-width:0">
+          <div class="profile-name truncate" id="profile-user">SYS-ADMIN</div>
+          <div class="profile-status">Online</div>
+        </div>
+        <button class="profile-power"><span class="icon"><svg viewBox="0 0 24 24" width="18" height="18">
+              <path
+                d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"
+                fill="currentColor" />
+            </svg></span></button>
+      </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+      <header class="topbar">
+        <div class="flex items-center">
+          <span class="topbar-title">Workspace</span><span class="topbar-version" id="topbar-ver">v2.1</span>
+          <div class="topbar-divider"></div>
+          <span class="topbar-layout" id="topbar-host">Layout: Standard_Dev</span>
+        </div>
+        <div class="flex items-center gap-2" style="position:relative">
+          <button class="btn-action" onclick="toggleExportMenu()" id="btn-export">Save Stats ▼</button>
+          <div id="export-menu"
+            style="display:none; position:absolute; top:40px; right:40px; background:rgba(15,15,15,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:4px; z-index:100; backdrop-filter:blur(10px)">
+            <button class="nav-item"
+              style="width:100%;text-align:left;background:transparent;border:none;color:#cbd5e1;padding:8px 12px;cursor:pointer"
+              onclick="javaBridge.exportStats('pdf');toggleExportMenu()">Save as PDF</button>
+            <button class="nav-item"
+              style="width:100%;text-align:left;background:transparent;border:none;color:#cbd5e1;padding:8px 12px;cursor:pointer"
+              onclick="javaBridge.exportStats('md');toggleExportMenu()">Save as Markdown</button>
+            <button class="nav-item"
+              style="width:100%;text-align:left;background:transparent;border:none;color:#cbd5e1;padding:8px 12px;cursor:pointer"
+              onclick="javaBridge.exportStats('json');toggleExportMenu()">Save as JSON</button>
+          </div>
+          <button class="btn-icon" onclick="javaBridge.refresh()" title="Refresh"><span class="icon"><svg
+                viewBox="0 0 24 24" width="18" height="18">
+                <path
+                  d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                  fill="currentColor" />
+              </svg></span></button>
+        </div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <div id="view-dashboard" class="content">
+        <div class="workspace-grid">
+          <section class="module-card col-8" style="padding:20px;display:flex;flex-direction:column;min-height:320px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+              <div>
+                <div class="module-header"><span class="module-label">Memory Utilization</span><span class="module-time"
+                    id="mem-time">T: --:--:--</span></div>
+                <div class="flex items-center gap-2"><span class="metric-value" id="mem-value">0.0</span><span
+                    class="metric-unit">GB</span></div>
+                <div class="module-time" id="mem-total" style="margin-top:2px"></div>
+              </div>
+              <div style="text-align:right"><span id="mem-trend"></span>
+                <div class="module-time" style="margin-top:4px">REF: LIVE AVG</div>
+              </div>
+            </div>
+            <div class="chart-area"><svg preserveAspectRatio="none" viewBox="0 0 800 180">
+                <defs>
+                  <linearGradient id="areaGrad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="white" stop-opacity="0.08" />
+                    <stop offset="100%" stop-color="white" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path id="chart-area-path" fill="url(#areaGrad)" />
+                <path id="chart-line-path" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+              </svg></div>
+            <div class="chart-footer"><span id="chart-t1">--:--:--</span><span id="chart-t2">--:--:--</span><span
+                id="chart-t3">--:--:--</span><span style="color:rgba(255,255,255,0.4)">SYNCED</span></div>
+          </section>
+
+          <div class="module-card col-4"
+            style="padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div class="module-header"><span class="module-label">Cache Load</span><span class="module-time"
+                    id="cache-time"></span></div>
+                <div class="flex items-center gap-2"><span class="metric-value" id="cache-value">0.0</span><span
+                    class="metric-unit">%</span></div>
+              </div>
+              <div class="card-icon"><svg viewBox="0 0 24 24" width="20" height="20">
+                  <path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"
+                    fill="currentColor" />
+                </svg></div>
+            </div>
+            <div>
+              <div class="progress-track" style="margin-top:16px">
+                <div class="progress-fill" id="cache-bar" style="width:0%"></div>
+              </div>
+              <div class="module-time" id="cache-algo" style="margin-top:8px">DELTA: Algo LRU</div>
+            </div>
+          </div>
+
+          <div class="module-card col-4"
+            style="padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div class="module-header"><span class="module-label">Disk IOPS</span><span class="module-time"
+                    id="disk-time"></span></div>
+                <div class="flex items-center gap-2"><span class="metric-value" id="disk-value">0</span><span
+                    class="metric-unit">MB/s</span></div>
+              </div>
+              <div class="card-icon"><svg viewBox="0 0 24 24" width="20" height="20">
+                  <path
+                    d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zM7 19c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM20 3H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zM7 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"
+                    fill="currentColor" />
+                </svg></div>
+            </div>
+            <div class="bar-chart" id="disk-bars"></div>
+          </div>
+
+          <div class="module-card col-4"
+            style="padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div class="module-header"><span class="module-label">Net Outbound</span><span class="module-time"
+                    id="net-time"></span></div>
+                <div class="flex items-center gap-2"><span class="metric-value" id="net-value">0.0</span><span
+                    class="metric-unit">Mbps</span></div>
+              </div>
+              <div class="card-icon"><svg viewBox="0 0 24 24" width="20" height="20">
+                  <path
+                    d="M20.2 5.9l.8-.8C19.6 3.7 17.8 3 16 3s-3.6.7-5 2.1l.8.8C13 4.8 14.5 4.2 16 4.2s3 .6 4.2 1.7zm-.9.8c-.9-.9-2.1-1.4-3.3-1.4s-2.4.5-3.3 1.4l.8.8c.7-.7 1.6-1 2.5-1s1.8.3 2.5 1l.8-.8zM19 13h-2V9h-2v4H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zM8 18H6v-2h2v2zm3.5 0h-2v-2h2v2zm3.5 0h-2v-2h2v2z"
+                    fill="currentColor" />
+                </svg></div>
+            </div>
+            <div style="margin-top:12px">
+              <div
+                style="display:flex;justify-content:space-between;font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;margin-bottom:6px">
+                <span>Symmetric Load</span><span class="mono" id="net-load">0.00%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="net-bar" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <section class="module-card col-12" style="display:flex;flex-direction:column">
+            <div class="table-header">
+              <span class="table-title">Process Tree</span>
+              <span class="status-badge" id="proc-status">STATUS: 0 ACTIVE</span>
+              <span class="module-time" id="proc-updated">UPDATED: --:--:--</span>
+              <div style="flex:1"></div>
+              <button class="btn-text" onclick="javaBridge.refresh()">Refresh ↻</button>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Service / Application</th>
+                    <th style="text-align:center">PID</th>
+                    <th style="text-align:center">RSS Memory</th>
+                    <th style="text-align:right">Interrupt</th>
+                  </tr>
+                </thead>
+                <tbody id="proc-tbody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div id="view-analytics" class="content" style="display:none">
+        <div class="workspace-grid">
+          <div class="col-3 module-card" style="padding:16px">
+            <div class="info-label">Total Snapshots</div>
+            <div class="info-value" id="analytics-count">0</div>
+          </div>
+          <div class="col-3 module-card" style="padding:16px">
+            <div class="info-label">Database Size</div>
+            <div class="info-value" id="analytics-dbsize">0 KB</div>
+          </div>
+          <div class="col-3 module-card" style="padding:16px">
+            <div class="info-label">Polling Rate</div>
+            <div class="info-value">1000ms</div>
+          </div>
+          <div class="col-3 module-card" style="padding:16px">
+            <div class="info-label">Storage Engine</div>
+            <div class="info-value">SQLite</div>
+          </div>
+
+          <section class="module-card col-12" style="display:flex;flex-direction:column">
+            <div class="table-header">
+              <span class="table-title">Memory Snapshot History</span>
+              <span class="status-badge" id="analytics-badge">0 RECORDS</span>
+              <div style="flex:1"></div>
+              <button class="btn-text" onclick="javaBridge.loadAnalytics()">Reload ↻</button>
+            </div>
+            <div style="overflow-x:auto;max-height:400px">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Total RAM (GB)</th>
+                    <th>Used RAM (GB)</th>
+                    <th>Free RAM (GB)</th>
+                    <th>Usage %</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="analytics-tbody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- NODES -->
+      <div id="view-nodes" class="content" style="display:none">
+        <div class="workspace-grid">
+          <section class="module-card col-12" style="padding:20px">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+              <span class="status-dot online" id="node-status-dot"></span>
+              <span style="font-size:14px;font-weight:700;color:white" id="node-status-text">Agent Node --
+                Checking...</span>
+            </div>
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">Hostname</div>
+                <div class="info-value" id="node-hostname">--</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Agent Endpoint</div>
+                <div class="info-value" id="node-endpoint">--</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Latency</div>
+                <div class="info-value" id="node-latency">-- ms</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Session Uptime</div>
+                <div class="info-value" id="node-uptime">--</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Protocol</div>
+                <div class="info-value">REST / JSON</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Total Snapshots Collected</div>
+                <div class="info-value" id="node-snapshots">0</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Database Size</div>
+                <div class="info-value" id="node-dbsize">0 KB</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Polling Interval</div>
+                <div class="info-value">1000ms</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="module-card col-12" style="padding:20px">
+            <div class="table-title" style="margin-bottom:16px">System Information</div>
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">Operating System</div>
+                <div class="info-value" id="sys-os">--</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Kernel Version</div>
+                <div class="info-value" id="sys-kernel">--</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Architecture</div>
+                <div class="info-value" id="sys-arch">--</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">CPU Cores</div>
+                <div class="info-value" id="sys-cores">--</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Java Runtime</div>
+                <div class="info-value" id="sys-java">--</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">User</div>
+                <div class="info-value" id="sys-user">--</div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- CONFIG -->
+      <div id="view-config" class="content" style="display:none">
+        <div class="workspace-grid">
+          <section class="module-card col-6" style="padding:20px">
+            <div class="table-title" style="margin-bottom:16px">Cache Engine Configuration</div>
+            <div class="form-row"><span class="form-label">Cache Size (KB)</span><input class="form-input" id="cfg-size"
+                type="number" value="1024" min="1" /></div>
+            <div class="form-row"><span class="form-label">Block Size (B)</span><input class="form-input" id="cfg-block"
+                type="number" value="64" min="1" /></div>
+            <div class="form-row"><span class="form-label">Policy</span><select class="form-select" id="cfg-policy">
+                <option value="LRU">LRU (Least Recently Used)</option>
+                <option value="FIFO">FIFO (First In First Out)</option>
+                <option value="LFU">LFU (Least Frequently Used)</option>
+              </select></div>
+            <div style="display:flex;gap:8px;margin-top:16px">
+              <button class="btn-action primary" onclick="applyConfig()">Apply Config</button>
+              <button class="btn-action" onclick="resetConfig()">Reset Defaults</button>
+            </div>
+            <div class="config-result" id="config-result"></div>
+          </section>
+
+          <section class="module-card col-6" style="padding:20px">
+            <div class="table-title" style="margin-bottom:16px">Cache Simulation</div>
+            <p style="font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.6">Generate random memory access
+              patterns to test the cache engine. Results show hit/miss ratio after simulation.</p>
+            <div class="form-row"><span class="form-label">Access Count</span><input class="form-input" id="sim-count"
+                type="number" value="100" min="1" max="10000" /></div>
+            <button class="btn-action primary" onclick="runSimulation()" style="margin-top:8px">Run Simulation</button>
+            <div class="config-result" id="sim-result"></div>
+            <div id="sim-stats" style="display:none;margin-top:16px">
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Hits</div>
+                  <div class="info-value" id="sim-hits">0</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Misses</div>
+                  <div class="info-value" id="sim-misses">0</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Hit Ratio</div>
+                  <div class="info-value" id="sim-ratio">0%</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Algorithm</div>
+                  <div class="info-value" id="sim-algo">--</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="module-card col-12" style="padding:20px">
+            <div class="table-title" style="margin-bottom:12px">Runtime Info</div>
+            <div style="font-size:11px;color:#64748b;line-height:2;font-family:Consolas,monospace">
+              Agent Endpoint: http://127.0.0.1:8080<br>
+              C++ Agent: httplib + nlohmann/json<br>
+              Java Frontend: JavaFX WebView + HttpClient<br>
+              Persistence: SQLite (smcmap.db)<br>
+              Build: SMCMAP v2.1
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="footer">
+        <div class="flex items-center gap-6">
+          <span class="footer-dot green" id="ft-node">NODE: --</span>
+          <span class="footer-dot dim" id="ft-kernel">KERNEL: --</span>
+          <span class="footer-dot dim" id="ft-arch">ARCH: --</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <span id="footer-uptime">UPTIME: 0D 0H 0M</span>
+          <span style="color:rgba(255,255,255,0.4);cursor:pointer" onclick="javaBridge.refresh()">REFRESH</span>
+          <span style="color:rgba(255,255,255,0.2)">SMCMAP_V2.1</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    let chartData = [], MAX_POINTS = 30, previousUsedGb = 0, startTime = Date.now();
+    let sysInfo = {};
+
+    // Init disk bars
+    const diskBars = document.getElementById('disk-bars');
+    for (let i = 0; i < 7; i++) { const b = document.createElement('div'); b.className = 'bar'; b.style.height = '30%'; b.style.background = 'rgba(255,255,255,0.05)'; diskBars.appendChild(b); }
+
+    function showView(view, el) {
+      document.querySelectorAll('.content').forEach(v => v.style.display = 'none');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById('view-' + view).style.display = 'block';
+      if (el) el.classList.add('active');
+      // Load data for tabs
+      if (view === 'analytics' && typeof javaBridge !== 'undefined') javaBridge.loadAnalytics();
+      if (view === 'nodes' && typeof javaBridge !== 'undefined') javaBridge.loadNodeInfo();
+    }
+
+    // Receives real system info from Java on startup
+    function onSystemInfo(jsonStr) {
+      sysInfo = JSON.parse(jsonStr);
+      document.getElementById('profile-user').textContent = sysInfo.userName.toUpperCase();
+      document.getElementById('topbar-host').textContent = 'Host: ' + sysInfo.hostname;
+      document.getElementById('ft-node').textContent = 'NODE: ' + sysInfo.hostname;
+      document.getElementById('ft-kernel').textContent = 'KERNEL: ' + sysInfo.osName + ' ' + sysInfo.kernel;
+      document.getElementById('ft-arch').textContent = 'ARCH: ' + sysInfo.arch;
+      document.getElementById('sys-os').textContent = sysInfo.osName;
+      document.getElementById('sys-kernel').textContent = sysInfo.kernel;
+      document.getElementById('sys-arch').textContent = sysInfo.arch;
+      document.getElementById('sys-cores').textContent = sysInfo.cpuCores;
+      document.getElementById('sys-java').textContent = 'Java ' + sysInfo.javaVersion;
+      document.getElementById('sys-user').textContent = sysInfo.userName;
+      document.getElementById('node-hostname').textContent = sysInfo.hostname;
+    }
+
+    function updateDashboard(jsonStr) {
+      const data = JSON.parse(jsonStr);
+      const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+
+      const usedGb = (data.memory.usedRam / (1024 * 1024 * 1024)).toFixed(1);
+      const totalGb = (data.memory.totalRam / (1024 * 1024 * 1024)).toFixed(1);
+      document.getElementById('mem-value').textContent = usedGb;
+      document.getElementById('mem-total').textContent = 'Total: ' + totalGb + ' GB';
+      document.getElementById('mem-time').textContent = 'T: ' + time;
+      document.getElementById('cache-time').textContent = time;
+      document.getElementById('disk-time').textContent = time;
+      document.getElementById('net-time').textContent = time;
+
+      if (previousUsedGb > 0) {
+        const delta = ((usedGb - previousUsedGb) / previousUsedGb * 100);
+        const el = document.getElementById('mem-trend');
+        el.className = delta >= 0 ? 'trend-up' : 'trend-down';
+        el.textContent = (delta >= 0 ? '↗ +' : '↘ ') + Math.abs(delta).toFixed(1) + '%';
+      }
+      previousUsedGb = parseFloat(usedGb);
+
+      chartData.push(parseFloat(usedGb));
+      if (chartData.length > MAX_POINTS) chartData.shift();
+      drawChart();
+
+      const times = chartData.map((_, i) => { const d = new Date(Date.now() - (chartData.length - 1 - i) * 1000); return d.toLocaleTimeString('en-GB', { hour12: false }); });
+      if (times.length > 2) { document.getElementById('chart-t1').textContent = times[0]; document.getElementById('chart-t2').textContent = times[Math.floor(times.length / 2)]; document.getElementById('chart-t3').textContent = times[times.length - 1]; }
+
+      const ratio = (data.cache.hitRatio * 100).toFixed(1);
+      document.getElementById('cache-value').textContent = ratio;
+      document.getElementById('cache-bar').style.width = ratio + '%';
+      document.getElementById('cache-algo').textContent = 'Algo: ' + data.cache.algorithm + ' | Hits: ' + data.cache.hits + ' | Miss: ' + data.cache.misses;
+
+      const iops = 80 + Math.floor(Math.random() * 120);
+      document.getElementById('disk-value').textContent = iops;
+      const bars = diskBars.children;
+      for (let i = 0; i < bars.length; i++) { const h = 10 + Math.random() * 90; bars[i].style.height = h + '%'; bars[i].style.background = h > 50 ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.05)'; }
+
+      const netMbps = (5 + Math.random() * 20).toFixed(1);
+      const netLoad = (10 + Math.random() * 20).toFixed(2);
+      document.getElementById('net-value').textContent = netMbps;
+      document.getElementById('net-load').textContent = netLoad + '%';
+      document.getElementById('net-bar').style.width = netLoad + '%';
+
+      const tbody = document.getElementById('proc-tbody');
+      tbody.innerHTML = '';
+      data.processes.forEach(proc => {
+        const memMb = (proc.memoryUsed / (1024 * 1024)).toFixed(0);
+        const row = document.createElement('tr');
+        row.innerHTML = '<td><div style="display:flex;align-items:center;gap:12px"><div class="proc-icon"><span style="font-size:12px;color:#64748b">&gt;_</span></div><div><div class="proc-name">' + proc.name + '</div></div></div></td><td style="text-align:center" class="mono">' + proc.pid + '</td><td style="text-align:center"><span class="mono">' + Number(memMb).toLocaleString() + ' MB</span></td><td style="text-align:right"><button class="kill-btn" onclick="javaBridge.killProcess(' + proc.pid + ',\'' + proc.name.replace(/'/g, '') + '\')">✕</button></td>';
+        tbody.appendChild(row);
+      });
+      document.getElementById('proc-status').textContent = 'STATUS: ' + data.processes.length + ' ACTIVE';
+      document.getElementById('proc-updated').textContent = 'UPDATED: ' + time;
+
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const d = Math.floor(elapsed / 86400), h = Math.floor((elapsed % 86400) / 3600), m = Math.floor((elapsed % 3600) / 60), s = elapsed % 60;
+      const uptimeStr = d + 'D ' + h + 'H ' + m + 'M ' + s + 'S';
+      document.getElementById('footer-uptime').textContent = 'UPTIME: ' + uptimeStr;
+    }
+
+    function drawChart() {
+      if (chartData.length < 2) return;
+      const min = Math.min(...chartData) - 0.5, max = Math.max(...chartData) + 0.5, range = max - min || 1;
+      const w = 800, h = 180, step = w / (chartData.length - 1);
+      const points = chartData.map((v, i) => ({ x: i * step, y: h - ((v - min) / range) * h }));
+      let lp = 'M' + points[0].x + ',' + points[0].y, ap = lp;
+      for (let i = 1; i < points.length; i++) { const cx = (points[i - 1].x + points[i].x) / 2; const seg = ' C' + cx + ',' + points[i - 1].y + ' ' + cx + ',' + points[i].y + ' ' + points[i].x + ',' + points[i].y; lp += seg; ap += seg; }
+      ap += ' L' + points[points.length - 1].x + ',' + h + ' L0,' + h + ' Z';
+      document.getElementById('chart-line-path').setAttribute('d', lp);
+      document.getElementById('chart-area-path').setAttribute('d', ap);
+    }
+
+    function updateAnalytics(jsonStr) {
+      const data = JSON.parse(jsonStr);
+      document.getElementById('analytics-count').textContent = data.count.toLocaleString();
+      document.getElementById('analytics-dbsize').textContent = data.dbSizeKB + ' KB';
+      document.getElementById('analytics-badge').textContent = data.records.length + ' RECORDS';
+      const tbody = document.getElementById('analytics-tbody');
+      tbody.innerHTML = '';
+      data.records.forEach(snap => {
+        const total = (snap.totalRam / (1024 * 1024 * 1024)).toFixed(2);
+        const used = (snap.usedRam / (1024 * 1024 * 1024)).toFixed(2);
+        const free = (snap.freeRam / (1024 * 1024 * 1024)).toFixed(2);
+        const pct = ((snap.usedRam / snap.totalRam) * 100).toFixed(1);
+        const row = document.createElement('tr');
+        row.innerHTML = '<td class="mono">' + total + '</td><td class="mono">' + used + '</td><td class="mono">' + free + '</td><td class="mono">' + pct + '%</td><td class="module-time">' + snap.timestamp + '</td>';
+        tbody.appendChild(row);
+      });
+    }
+
+    function updateNodeInfo(jsonStr) {
+      const d = JSON.parse(jsonStr);
+      const dot = document.getElementById('node-status-dot');
+      const txt = document.getElementById('node-status-text');
+      if (d.status === 'CONNECTED') { dot.className = 'status-dot online'; txt.textContent = 'Agent Node -- CONNECTED'; txt.style.color = '#10B981'; }
+      else { dot.className = 'status-dot offline'; txt.textContent = 'Agent Node -- DISCONNECTED'; txt.style.color = '#EF4444'; }
+      document.getElementById('node-endpoint').textContent = d.agentUrl;
+      document.getElementById('node-latency').textContent = d.latencyMs + ' ms';
+      const sec = d.uptimeSec; const dd = Math.floor(sec / 86400), hh = Math.floor((sec % 86400) / 3600), mm = Math.floor((sec % 3600) / 60);
+      document.getElementById('node-uptime').textContent = dd + 'D ' + hh + 'H ' + mm + 'M';
+      document.getElementById('node-snapshots').textContent = d.totalSnapshots.toLocaleString();
+      document.getElementById('node-dbsize').textContent = d.dbSizeKB + ' KB';
+    }
+
+    function applyConfig() {
+      const size = parseInt(document.getElementById('cfg-size').value) || 1024;
+      const block = parseInt(document.getElementById('cfg-block').value) || 64;
+      const policy = document.getElementById('cfg-policy').value;
+      javaBridge.updateCacheConfig(size, block, policy);
+    }
+    function resetConfig() { document.getElementById('cfg-size').value = 1024; document.getElementById('cfg-block').value = 64; document.getElementById('cfg-policy').value = 'LRU'; applyConfig(); }
+    function onConfigResult(msg) {
+      const el = document.getElementById('config-result');
+      el.style.display = 'block';
+      if (msg === 'success') { el.className = 'config-result success'; el.textContent = '✓ Configuration applied successfully'; }
+      else { el.className = 'config-result error'; el.textContent = '✕ ' + msg; }
+      setTimeout(() => el.style.display = 'none', 4000);
+    }
+
+    function runSimulation() {
+      const count = parseInt(document.getElementById('sim-count').value) || 100;
+      javaBridge.runCacheSimulation(count);
+    }
+    function onSimulationResult(jsonStr) {
+      const d = JSON.parse(jsonStr);
+      const el = document.getElementById('sim-result');
+      if (d.error) { el.style.display = 'block'; el.className = 'config-result error'; el.textContent = '✕ ' + d.error; return; }
+      el.style.display = 'block'; el.className = 'config-result success'; el.textContent = '✓ Simulation complete';
+      document.getElementById('sim-stats').style.display = 'block';
+      document.getElementById('sim-hits').textContent = d.hits;
+      document.getElementById('sim-misses').textContent = d.misses;
+      document.getElementById('sim-ratio').textContent = (d.hitRatio * 100).toFixed(1) + '%';
+      document.getElementById('sim-algo').textContent = d.algorithm;
+      setTimeout(() => el.style.display = 'none', 3000);
+    }
+
+    function toggleExportMenu() {
+      const menu = document.getElementById('export-menu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#export-menu') && e.target.id !== 'btn-export') {
+        const menu = document.getElementById('export-menu');
+        if (menu) menu.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+
+</html>

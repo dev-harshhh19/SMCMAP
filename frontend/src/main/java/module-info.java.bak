@@ -1,0 +1,18 @@
+module com.smcmap {
+  requires javafx.controls;
+  requires javafx.fxml;
+  requires javafx.web;
+  requires jdk.jsobject;
+  requires java.sql;
+  requires java.net.http;
+  requires com.google.gson;
+
+  opens com.smcmap to javafx.fxml, javafx.web;
+  opens com.smcmap.ui to javafx.fxml, javafx.web;
+  opens com.smcmap.model to com.google.gson, javafx.base;
+
+  exports com.smcmap;
+  exports com.smcmap.ui;
+  exports com.smcmap.service;
+  exports com.smcmap.model;
+}

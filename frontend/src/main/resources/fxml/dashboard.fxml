@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.shape.Rectangle?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.smcmap.ui.DashboardController" stylesheets="@../css/styles.css" styleClass="main-workspace">
+    
+    <!-- Sidebar -->
+    <left>
+        <VBox styleClass="sidebar">
+            <HBox styleClass="sidebar-header" spacing="10">
+                <Label text="[#]" styleClass="sidebar-icon" />
+                <VBox>
+                    <Label text="SMCMAP-WS" styleClass="header-text" />
+                    <Label text="SYSTEM TERMINAL" styleClass="header-subtitle" />
+                </VBox>
+            </HBox>
+            <VBox styleClass="nav-menu">
+                <Button text="[+] LAYOUT EDITOR" onAction="#showLayoutEditor" styleClass="nav-item, nav-item-active" />
+                <Button text="[~] ANALYTICS" onAction="#showAnalytics" styleClass="nav-item" />
+                <Button text="[=] NODES" onAction="#showNodes" styleClass="nav-item" />
+            </VBox>
+            <Region VBox.vgrow="ALWAYS" />
+            <VBox styleClass="sidebar-section-header">
+                <Label text="CORE SETTINGS" styleClass="sidebar-section-title" />
+            </VBox>
+            <VBox styleClass="nav-menu">
+                <Button text="[#] CONFIG" onAction="#handleAdd" styleClass="nav-item" />
+            </VBox>
+            <Region VBox.vgrow="ALWAYS" />
+            <!-- User Profile at Bottom -->
+            <HBox styleClass="sidebar-profile" spacing="10">
+                <Label text="[@]" styleClass="profile-icon" />
+                <VBox>
+                    <Label text="SYS-ADMIN_01" styleClass="profile-name" />
+                    <Label text="STANDARD" styleClass="profile-role" />
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="O" styleClass="profile-btn" />
+            </HBox>
+        </VBox>
+    </left>
+    
+    <!-- Main Content -->
+    <center>
+        <VBox>
+            <!-- Topbar -->
+            <HBox styleClass="topbar">
+                <Label text="WORKSPACE" styleClass="topbar-title" />
+                <Label text=" V2.1" styleClass="topbar-version" />
+                <Label text="  |  " styleClass="topbar-sep" />
+                <Label text="LAYOUT: STANDARD_DEV" styleClass="topbar-layout" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="[+]" onAction="#handleAdd" styleClass="btn-icon" />
+                <Button text="[S]" onAction="#handleSave" styleClass="btn-icon" />
+                <Button text="[:::]" styleClass="btn-icon" />
+                <Button text="[=]" styleClass="btn-icon" />
+            </HBox>
+            
+            <!-- Dashboard Grid -->
+            <ScrollPane fx:id="mainScroll" fitToWidth="true" styleClass="dashboard-scroll">
+                <GridPane fx:id="dashboardGrid" styleClass="workspace-grid" hgap="16" vgap="16">
+                    <padding><Insets top="24" right="24" bottom="24" left="24" /></padding>
+                    
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="25" />
+                        <ColumnConstraints percentWidth="25" />
+                        <ColumnConstraints percentWidth="25" />
+                        <ColumnConstraints percentWidth="25" />
+                    </columnConstraints>
+                    
+                    <!-- Memory Utilization Module (spans 3 cols) -->
+                    <VBox styleClass="module-card" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="MEMORY UTILIZATION" styleClass="module-title" />
+                            <Label fx:id="timeLabel" text="  T: 00:00:00" styleClass="module-time" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label fx:id="trendLabel" text="" styleClass="trend-up" />
+                            <VBox alignment="CENTER_RIGHT">
+                                <Label fx:id="refLabel" text="REF: 30M AVG" styleClass="module-time" />
+                            </VBox>
+                        </HBox>
+                        <HBox alignment="BOTTOM_LEFT">
+                            <Label fx:id="usedMemoryLabel" text="0.0" styleClass="metric-value" />
+                            <Label text=" GB" styleClass="metric-unit" />
+                        </HBox>
+                        <Label fx:id="totalMemoryLabel" text="Total: 0.0 GB" styleClass="metric-subtitle" />
+                        <!-- Memory Chart -->
+                        <LineChart fx:id="memoryChart" styleClass="mem-chart" VBox.vgrow="ALWAYS" createSymbols="false" animated="false" legendVisible="false">
+                            <xAxis><CategoryAxis side="BOTTOM" styleClass="chart-axis" /></xAxis>
+                            <yAxis><NumberAxis side="LEFT" styleClass="chart-axis" /></yAxis>
+                        </LineChart>
+                        <HBox alignment="CENTER_LEFT">
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label text="SYNCED" styleClass="module-time" />
+                        </HBox>
+                    </VBox>
+
+                    <!-- CPU / Cache Load -->
+                    <VBox styleClass="module-card" GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="CACHE" styleClass="module-title" />
+                            <Label text="  T: " styleClass="module-title" />
+                            <Label fx:id="cacheTimeLabel" text="00:00:00" styleClass="module-time" />
+                        </HBox>
+                        <Label text="LOAD" styleClass="module-title" />
+                        <HBox alignment="BOTTOM_LEFT">
+                            <Label fx:id="hitRatioLabel" text="0.0" styleClass="metric-value" />
+                            <Label text="\%" styleClass="metric-unit" />
+                        </HBox>
+                        <Region VBox.vgrow="ALWAYS" minHeight="30" />
+                        <!-- Mini bars -->
+                        <HBox spacing="4" styleClass="mini-bars">
+                            <Rectangle width="40" height="8" styleClass="bar-filled" />
+                            <Rectangle width="40" height="8" styleClass="bar-empty" />
+                        </HBox>
+                        <HBox styleClass="metric-delta">
+                            <Label fx:id="cacheAlgoLabel" text="DELTA: Algo LRU" styleClass="metric-subtitle" />
+                        </HBox>
+                    </VBox>
+
+                    <!-- Disk IOPS Card -->
+                    <VBox styleClass="module-card" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="DISK IOPS" styleClass="module-title" />
+                            <Label fx:id="diskTimeLabel" text="  T: 00:00:00" styleClass="module-time" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label text="[D]" styleClass="card-icon" />
+                        </HBox>
+                        <HBox alignment="BOTTOM_LEFT">
+                            <Label fx:id="diskIopsLabel" text="0" styleClass="metric-value" />
+                            <Label text=" MB/s" styleClass="metric-unit" />
+                        </HBox>
+                        <Region VBox.vgrow="ALWAYS" minHeight="20" />
+                        <!-- Mini bar chart -->
+                        <HBox spacing="6" alignment="BOTTOM_LEFT" styleClass="iops-bars">
+                            <Rectangle fx:id="bar1" width="24" height="20" styleClass="bar-filled" />
+                            <Rectangle fx:id="bar2" width="24" height="30" styleClass="bar-filled" />
+                            <Rectangle fx:id="bar3" width="24" height="15" styleClass="bar-empty" />
+                            <Rectangle fx:id="bar4" width="24" height="40" styleClass="bar-filled" />
+                            <Rectangle fx:id="bar5" width="24" height="35" styleClass="bar-filled" />
+                            <Rectangle fx:id="bar6" width="24" height="25" styleClass="bar-filled" />
+                            <Rectangle fx:id="bar7" width="24" height="10" styleClass="bar-empty" />
+                        </HBox>
+                    </VBox>
+
+                    <!-- Net Outbound Card -->
+                    <VBox styleClass="module-card" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="NET OUTBOUND" styleClass="module-title" />
+                            <Label fx:id="netTimeLabel" text="  T: 00:00:00" styleClass="module-time" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label text="[N]" styleClass="card-icon" />
+                        </HBox>
+                        <HBox alignment="BOTTOM_LEFT">
+                            <Label fx:id="netOutLabel" text="0.0" styleClass="metric-value" />
+                            <Label text=" Mbps" styleClass="metric-unit" />
+                        </HBox>
+                        <Region VBox.vgrow="ALWAYS" minHeight="20" />
+                        <Label text="SYMMETRIC LOAD" styleClass="metric-subtitle" />
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label fx:id="netLoadLabel" text="0.00\%" styleClass="module-time" />
+                        </HBox>
+                        <!-- Progress bar -->
+                        <ProgressBar fx:id="netProgress" progress="0.0" styleClass="net-bar" maxWidth="1.7976931348623157E308" />
+                    </VBox>
+
+                    <!-- Process Tree Table (full width) -->
+                    <VBox styleClass="module-card" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="4" GridPane.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" styleClass="module-header-border" spacing="10">
+                            <Label text="PROCESS TREE" styleClass="module-title-bold" />
+                            <Label fx:id="processCountLabel" text="STATUS: 0 ACTIVE" styleClass="status-badge" />
+                            <Label fx:id="processUpdatedLabel" text="UPDATED: 00:00:00" styleClass="module-time" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button text="FULL VIEW" onAction="#handleRefresh" styleClass="btn-small" />
+                        </HBox>
+                        <TableView fx:id="processTable" VBox.vgrow="ALWAYS" styleClass="dark-table">
+                            <columns>
+                                <TableColumn fx:id="colName" text="SERVICE / APPLICATION" prefWidth="350" />
+                                <TableColumn fx:id="colPid" text="PID" prefWidth="100" />
+                                <TableColumn fx:id="colMemory" text="RSS MEMORY" prefWidth="180" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </GridPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+    
+    <!-- Footer -->
+    <bottom>
+        <HBox styleClass="footer" spacing="20">
+            <Label text="NODE: SM-01" styleClass="footer-dot-green" />
+            <Label text="KERNEL: 5.15-SMC" styleClass="footer-text" />
+            <Label text="GRID: SNAP-24PX" styleClass="footer-text" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="uptimeLabel" text="UPTIME: 0D 0H 0M" styleClass="footer-text" />
+            <Label text="REFRESH_LAYOUT" styleClass="footer-text" />
+            <Label fx:id="statusLabel" text="Connecting..." styleClass="footer-text" />
+        </HBox>
+    </bottom>
+</BorderPane>
