@@ -53,7 +53,7 @@
             <!-- Topbar -->
             <HBox styleClass="topbar">
                 <Label text="WORKSPACE" styleClass="topbar-title" />
-                <Label text=" V2.1" styleClass="topbar-version" />
+                <Label text=" v1.0" styleClass="topbar-version" />
                 <Label text="  |  " styleClass="topbar-sep" />
                 <Label text="LAYOUT: STANDARD_DEV" styleClass="topbar-layout" />
                 <Region HBox.hgrow="ALWAYS" />
