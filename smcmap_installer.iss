@@ -12,7 +12,6 @@ Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
 ArchitecturesInstallIn64BitMode=x64
-SetupIconFile=portable_build\SMCMAP\SMCMAP.exe
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
