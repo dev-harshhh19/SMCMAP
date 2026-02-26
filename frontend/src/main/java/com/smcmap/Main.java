@@ -107,10 +107,26 @@ public class Main extends Application {
   private void startAgentProcess() {
     new Thread(() -> {
       try {
-        // Look for the compiled agent in common locations
-        File agentExe = new File("agent/build/Release/smcmap_agent.exe");
+        // Try finding it relative to where the Java app is actually running (important
+        // for Start Menu shortcuts)
+        File agentExe = new File("agent/build/Release/smcmap_agent.exe"); // Dev environment
+
         if (!agentExe.exists()) {
-          agentExe = new File("smcmap_agent.exe"); // If running from a bundled directory
+          // Check same directory (Portable / MSI Install folder)
+          agentExe = new File(System.getProperty("user.dir"), "smcmap_agent.exe");
+        }
+
+        if (!agentExe.exists()) {
+          // If launched via Start Menu, user.dir might be System32 or the user's home
+          // dir.
+          // Get the base path of the running Java executable directory instead.
+          try {
+            String jarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            File libDir = new File(jarPath).getParentFile(); // e.g., C:\Program Files\SMCMAP\app\
+            File appRoot = libDir.getParentFile(); // e.g., C:\Program Files\SMCMAP\
+            agentExe = new File(appRoot, "smcmap_agent.exe");
+          } catch (Exception ignored) {
+          }
         }
 
         if (agentExe.exists()) {

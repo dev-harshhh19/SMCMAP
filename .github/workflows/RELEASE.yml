@@ -35,7 +35,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: installer_build/*.msi
+          files: installer_build/*.exe
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false

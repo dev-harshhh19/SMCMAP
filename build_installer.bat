@@ -34,13 +34,13 @@ jpackage --type app-image ^
 echo Copying C++ Agent to the app image...
 copy agent\build\Release\smcmap_agent.exe portable_build\SMCMAP\smcmap_agent.exe
 
-echo Creating MSI Installer Package (Requires WiX Toolset 3.0+)...
-jpackage --type msi ^
-    --app-image portable_build\SMCMAP ^
-    --name SMCMAP-Setup ^
-    --dest installer_build ^
-    --win-shortcut ^
-    --win-menu ^
-    --win-dir-chooser
-
-echo Done! The MSI installer is located in the installer_build folder.
+echo Creating Setup Installer using Inno Setup...
+set "INNO_SETUP=%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
+if exist "%INNO_SETUP%" (
+    "%INNO_SETUP%" smcmap_installer.iss
+    echo Done! The Setup installer is located in the installer_build folder.
+) else (
+    echo WARNING: Inno Setup 6 was not found at "%INNO_SETUP%". 
+    echo Please install it from https://jrsoftware.org/isdl.php to build the final setup.exe locally.
+    echo GitHub Actions will still be able to build it successfully natively.
+)
